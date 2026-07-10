@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公文管理系统 - 公文列表</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">公文管理系统</div>
+            <div class="user-info">
+                <div class="user-avatar" th:text="${user.realName.charAt(0)}"></div>
+                <div class="user-details">
+                    <span class="user-name">[[${user.realName}]]</span>
+                    <span class="user-role" th:text="${user.role == 'ADMIN' ? '管理员' : '普通用户'}"></span>
+                </div>
+                <div class="user-dropdown">
+                    <a href="/change-password" class="user-dropdown-item">
+                        <i>🔑</i> 修改密码
+                    </a>
+                    <a href="/logout" class="user-dropdown-item">
+                        <i>🚪</i> 退出登录
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="sidebar">
+            <ul>
+                <li><a href="/dashboard">首页</a></li>
+                <li><a href="/documents">全部公文</a></li>
+                <li><a href="/documents/my">我的公文</a></li>
+                <li><a href="/documents/create">新建公文</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h2>公文列表</h2>
+                <a href="/documents/create" class="btn btn-primary">新建公文</a>
+            </div>
+            
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th>标题</th>
+                        <th>文号</th>
+                        <th>类型</th>
+                        <th>状态</th>
+                        <th>优先级</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="doc : ${documents}">
+                        <td><a th:href="@{/documents/{id}(id=${doc.id})}" th:text="${doc.title}"></a></td>
+                        <td th:text="${doc.documentNo} ?: '-'"></td>
+                        <td th:text="${doc.type} ?: '-'"></td>
+                        <td>
+                            <span th:class="status-tag" th:text="${doc.status}"></span>
+                        </td>
+                        <td th:text="${doc.priority}"></td>
+                        <td th:text="${doc.creator.realName}"></td>
+                        <td th:text="${#temporals.format(doc.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <a th:href="@{/documents/{id}(id=${doc.id})}" class="action-btn view">查看</a>
+                            <a th:if="${doc.status == 'DRAFT' && doc.creator.id == user.id}" th:href="@{/documents/{id}/submit(id=${doc.id})}" class="action-btn submit">提交审核</a>
+                            <a th:if="${user.role == 'ADMIN' && doc.status == 'PENDING_REVIEW'}" th:href="@{/documents/{id}/review(id=${doc.id})}" class="action-btn review">审核</a>
+                            <a th:if="${doc.creator.id == user.id}" th:href="@{/documents/{id}/delete(id=${doc.id})}" class="action-btn delete">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div th:if="${documents.isEmpty()}" class="empty-state">
+                暂无公文数据
+            </div>
+        </main>
+    </div>
+</body>
+</html>

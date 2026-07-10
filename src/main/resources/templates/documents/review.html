@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公文管理系统 - 审核公文</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">公文管理系统</div>
+            <div class="user-info">
+                <div class="user-avatar" th:text="${user.realName.charAt(0)}"></div>
+                <div class="user-details">
+                    <span class="user-name">[[${user.realName}]]</span>
+                    <span class="user-role" th:text="${user.role == 'ADMIN' ? '管理员' : '普通用户'}"></span>
+                </div>
+                <div class="user-dropdown">
+                    <a href="/change-password" class="user-dropdown-item">
+                        <i>🔑</i> 修改密码
+                    </a>
+                    <a href="/logout" class="user-dropdown-item">
+                        <i>🚪</i> 退出登录
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="sidebar">
+            <ul>
+                <li><a href="/dashboard">首页</a></li>
+                <li><a href="/documents">全部公文</a></li>
+                <li><a href="/documents/my">我的公文</a></li>
+                <li><a href="/documents/create">新建公文</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h2>审核公文</h2>
+                <a href="/documents" class="btn btn-secondary">返回列表</a>
+            </div>
+            
+            <div class="document-detail">
+                <div class="detail-header">
+                    <h1 th:text="${document.title}"></h1>
+                    <div class="detail-meta">
+                        <span class="meta-item">文号: <span th:text="${document.documentNo} ?: '-'"></span></span>
+                        <span class="meta-item">类型: <span th:text="${document.type} ?: '-'"></span></span>
+                        <span class="meta-item">创建人: <span th:text="${document.creator.realName}"></span></span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>正文内容</h3>
+                    <div class="content-area" th:text="${document.content} ?: '暂无内容'"></div>
+                </div>
+                
+                <form th:action="@{/documents/{id}/review(id=${document.id})}" method="post" class="review-form">
+                    <div class="form-group">
+                        <label>审核结果</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="result" value="APPROVE" checked> 通过</label>
+                            <label><input type="radio" name="result" value="REJECT"> 拒绝</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">审核意见</label>
+                        <textarea id="comment" name="comment" rows="4" maxlength="500"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">提交审核</button>
+                        <button type="button" class="btn btn-secondary" onclick="history.back()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

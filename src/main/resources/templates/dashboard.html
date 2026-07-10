@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公文管理系统 - 首页</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">公文管理系统</div>
+            <div class="user-info">
+                <div class="user-avatar" th:text="${user.realName.charAt(0)}"></div>
+                <div class="user-details">
+                    <span class="user-name">[[${user.realName}]]</span>
+                    <span class="user-role" th:text="${user.role == 'ADMIN' ? '管理员' : '普通用户'}"></span>
+                </div>
+                <div class="user-dropdown">
+                    <a href="/change-password" class="user-dropdown-item">
+                        <i>🔑</i> 修改密码
+                    </a>
+                    <a href="/logout" class="user-dropdown-item">
+                        <i>🚪</i> 退出登录
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="sidebar">
+            <ul>
+                <li><a href="/dashboard">首页</a></li>
+                <li><a href="/documents">全部公文</a></li>
+                <li><a href="/documents/my">我的公文</a></li>
+                <li><a href="/documents/create">新建公文</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h2>系统概览</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-info">
+                        <div class="stat-value" th:text="${pendingReviewCount}"></div>
+                        <div class="stat-label">待审核公文</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <div class="stat-value" th:text="${approvedCount}"></div>
+                        <div class="stat-label">已通过公文</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-info">
+                        <div class="stat-value" th:text="${draftCount}"></div>
+                        <div class="stat-label">草稿公文</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👤</div>
+                    <div class="stat-info">
+                        <div class="stat-value" th:text="${userCount}"></div>
+                        <div class="stat-label">系统用户</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quick-actions">
+                <h3>快捷操作</h3>
+                <div class="action-buttons">
+                    <a href="/documents/create" class="btn btn-primary">新建公文</a>
+                    <a href="/documents/my" class="btn btn-secondary">查看我的公文</a>
+                    <a href="/documents/pending" class="btn btn-warning">待审核公文</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公文管理系统 - 注册</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>用户注册</h1>
+            <p class="subtitle">Create Account</p>
+            
+            <form th:object="${registerRequest}" action="/register" method="post" oncontextmenu="return false;">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" th:field="*{username}" required minlength="3" maxlength="50" 
+                           oncopy="return false;" oncut="return false;" onpaste="return false;" autocomplete="off">
+                    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-text"></span>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" th:field="*{password}" required minlength="8" 
+                               oncopy="return false;" oncut="return false;" onpaste="return false;" autocomplete="off">
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">👁</button>
+                    </div>
+                    <small class="form-hint">密码要求：至少8位，包含大写字母、小写字母、数字和特殊字符(!@#$%^&*等)</small>
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-text"></span>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required 
+                               oncopy="return false;" oncut="return false;" onpaste="return false;" autocomplete="off">
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">👁</button>
+                    </div>
+                    <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-text"></span>
+                </div>
+                <div class="form-group">
+                    <label for="email">邮箱</label>
+                    <input type="email" id="email" th:field="*{email}" 
+                           oncopy="return false;" oncut="return false;" onpaste="return false;">
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-text"></span>
+                </div>
+                <div class="form-group">
+                    <label for="phone">手机号</label>
+                    <input type="tel" id="phone" th:field="*{phone}" 
+                           oncopy="return false;" oncut="return false;" onpaste="return false;">
+                    <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-text"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">注册</button>
+            </form>
+            
+            <p class="register-link">
+                已有账号？<a href="/login">立即登录</a>
+            </p>
+            
+            <div th:if="${error}" class="error-message">
+                [[${error}]]
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function togglePassword(fieldId) {
+            var input = document.getElementById(fieldId);
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'x' || e.key === 'X')) {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
